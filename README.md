@@ -1,4 +1,4 @@
-phonegap-plugin
+Kiip PhoneGap Plugin v1.0
 ===============
 
 A Phonegap plugin for the Kiip SDK. Currently supports Android only.
