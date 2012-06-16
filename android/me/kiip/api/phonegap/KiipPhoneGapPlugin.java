@@ -101,7 +101,11 @@ public class KiipPhoneGapPlugin extends Plugin {
 					
 					@Override
 					public void run() {
-						Kiip.getInstance().endSession((Activity) ctx, null);
+                                                if (Kiip.getInstance() == null) {
+                                                }
+                                                else {
+						    Kiip.getInstance().endSession((Activity) ctx, null);
+                                                }
 					}
 				});
 				
