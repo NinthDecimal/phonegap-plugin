@@ -24,7 +24,7 @@ Usage Instructions for Android
 
 4. Make sure both the Kiip and Cordova library are included in your build path.
 
-5. Add the following line to your `/res/xml/plugins.xml`:
+5. Add the following line to your `/res/xml/config.xml`:
 
    ```
    <plugin name="KiipPlugin" value="me.kiip.api.phonegap.KiipPhoneGapPlugin" />
