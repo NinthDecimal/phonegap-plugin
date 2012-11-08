@@ -53,30 +53,22 @@ Usage Instructions
 
 1. You should have the Kiip SDK and Plugin all installed now. To use the SDK you will need to initialize Kiip by doing:
 
-    kiip.init(api_key, api_secret, successCallback, failureCallback);
+    	kiip.init(api_key, api_secret, successCallback, failureCallback);
 
 2. You can save a moment by doing:
 
-    kiip.saveMoment(moment_id, score, successCallback, failureCallback);
+    	kiip.saveMoment(moment_id, successCallback, failureCallback);
 
 3. You can also listen in for virtual currency or swarms by implementing the following callbacks:
 
-    kiip.listenContent(onContentCallback);
-    kiip.listenSwarm(onSwarmCallback);
+		kiip.listenContent(onContentCallback);
+    	kiip.listenSwarm(onSwarmCallback);
 
 
 Help!
 ------
 
-This plugin is officially supported by the Kiip Support team. If you need a hand you can reach us at [kiip.me] [http://docs.kiip.com/#support].
-
-
-[phonegap-guide-android]: http://docs.phonegap.com/en/2.2.0/guide_getting-started_android_index.md.html#Getting%20Started%20with%20Android
-[phonegap-guide-ios]: http://docs.phonegap.com/en/2.2.0/guide_getting-started_ios_index.md.html#Getting%20Started%20with%20iOS
-[docs.kiip.me]: https://docs.kiip.me/
-[resume]: http://docs.phonegap.com/en/2.2.0/cordova_events_events.md.html#resume
-[pause]: http://docs.phonegap.com/en/2.2.0/cordova_events_events.md.html#pause
-[kiip.me]: http://docs.kiip.com/#support
+This plugin is officially supported by the Kiip Support team. If you need a hand you can reach us at [docs.kiip.me] [kiip.me]
 
 Licence
 ------------------------------
@@ -90,3 +82,11 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+[phonegap-guide-android]: http://docs.phonegap.com/en/2.2.0/guide_getting-started_android_index.md.html#Getting%20Started%20with%20Android
+[phonegap-guide-ios]: http://docs.phonegap.com/en/2.2.0/guide_getting-started_ios_index.md.html#Getting%20Started%20with%20iOS
+[docs.kiip.me]: https://docs.kiip.me/
+[resume]: http://docs.phonegap.com/en/2.2.0/cordova_events_events.md.html#resume
+[pause]: http://docs.phonegap.com/en/2.2.0/cordova_events_events.md.html#pause
+[kiip.me]: http://docs.kiip.com/#support
