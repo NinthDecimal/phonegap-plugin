@@ -1,114 +1,141 @@
 package me.kiip.api.phonegap;
 
-import me.kiip.api.Kiip;
+import java.util.HashMap;
+import java.util.Map;
 
+import me.kiip.sdk.Kiip;
+import me.kiip.sdk.Kiip.OnContentListener;
+import me.kiip.sdk.Kiip.OnSwarmListener;
+import me.kiip.sdk.Poptart;
+
+import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;
-import org.apache.cordova.api.PluginResult.Status;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
+import android.webkit.WebSettings.PluginState;
 
-import com.phonegap.api.Plugin;
+public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnContentListener {
+	static final String TAG = "KiipPhoneGapPlugin";
 
-/**
- * @author Nick HS
- * @company Kiip Inc.
- * @website http://kiip.me/
- *
- */
-public class KiipPhoneGapPlugin extends Plugin {
-	public static final String TAG = "KiipPhoneGapPlugin";
-	public static final String INIT = "init";
-	public static final String ACHIEVEMENT = "unlockAchievement";
-	public static final String LEADERBOARD = "saveLeaderboard";
-	public static final String END_SESSION = "endSession";
+	String mContentCallbackID;
+	String mSwarmCallbackID;
 
-	/* (non-Javadoc)
-	 * @see org.apache.cordova.api.Plugin#execute(java.lang.String, org.json.JSONArray, java.lang.String)
-	 */
+	String KIIP_APP_KEY;
+	String KIIP_APP_SECRET;
+
 	@Override
-	public PluginResult execute(String action, JSONArray data, String callbackId) {
-		PluginResult result = null;
-		
-		if (action.equals(INIT)) {
-			Log.d(TAG, "Initialzing and Starting Kiip Session");
-
+	public PluginResult execute(String action, JSONArray args, String callbackId) {
+		if (action.equals("initializeKiip")) {
 			try {
-				final String API_KEY = data.getString(0);
-				final String API_SECRET = data.getString(1);
-				
-				this.cordova.getActivity().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Kiip.init(cordova.getActivity(), API_KEY, API_SECRET);
-						Kiip.getInstance().startSession(cordova.getActivity(), null);
-					}
-				});
-			    
-			    result = new PluginResult(Status.OK);
-			    
+				KIIP_APP_KEY = args.getString(0);
+				KIIP_APP_SECRET = args.getString(1);
 			} catch (JSONException e) {
-				Log.e(TAG, "Failed to parse data passed in");
-				result = new PluginResult(Status.JSON_EXCEPTION);
 				e.printStackTrace();
-			} catch (Exception e) {
-				Log.e(TAG, "An uncaught exception occured");
-				result = new PluginResult(Status.ERROR);
+				return new PluginResult(PluginResult.Status.JSON_EXCEPTION);
 			}
-		}
-		
-		else if (action.equals(ACHIEVEMENT)) {
-			try {
-				String ID = data.getString(0);
-				Kiip.getInstance().unlockAchievement(ID, null);
-			    result = new PluginResult(Status.OK);
 
-			} catch (JSONException e) {
-				Log.e(TAG, "Failed to parse data passed in");
-				result = new PluginResult(Status.JSON_EXCEPTION);
-			} catch (Exception e) {
-				Log.e(TAG, "An uncaught exception occured");
-				result = new PluginResult(Status.ERROR);
-			}
-		}
-		
-		else if (action.equals(LEADERBOARD)) {
-			try {
-				String ID = data.getString(0);
-				int SCORE = data.getInt(1);
-				Kiip.getInstance().saveLeaderboard(ID, SCORE, null);
-			    result = new PluginResult(Status.OK);
+			Log.i(TAG, "About to init kiip");
 
-			} catch (JSONException e) {
-				Log.e(TAG, "Failed to parse data passed in");
-				result = new PluginResult(Status.JSON_EXCEPTION);
-			} catch (Exception e) {
-				Log.e(TAG, "An uncaught exception occured");
-				result = new PluginResult(Status.ERROR);
-			}
-		}
-		
-		else if (action.equals(END_SESSION)) {
-			try {
-				
-				if (Kiip.getInstance() == null) {
-				} else {
-					Kiip.getInstance().endSession(cordova.getActivity(), null);
+			cordova.getActivity().runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					Kiip k = Kiip.init(cordova.getActivity().getApplication(), KIIP_APP_KEY, KIIP_APP_SECRET);
+					Kiip.setInstance(k);
 				}
-				
-				result = new PluginResult(Status.OK);
-				
-			} catch (Exception e) {
-				Log.e(TAG, "An uncaught exception occured");
-				result = new PluginResult(Status.ERROR);
-			}
+			});
+
+			Log.e(TAG, "Kiip inited");
+
+			PluginResult result = new PluginResult(PluginResult.Status.OK);
+			return result;
+
+		} else if (action.equals("startSession")) {
+			return startSession();
+		} else if (action.equals("endSession")) {
+			return endSession();
+		} else if (action.equals("saveMoment")) {
+			cordova.getActivity().runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					Kiip.getInstance().saveMoment("test", new Kiip.Callback() {
+
+						@Override
+						public void onFinished(Kiip kiip, Poptart poptart) {
+							Log.i(TAG, "Showing reward (if one exists)");
+							poptart.show(cordova.getActivity());
+						}
+
+						@Override
+						public void onFailed(Kiip kiip, Exception exception) {
+							Log.w(TAG, "Failed to load Kiip Reward");
+							Log.w(TAG, exception.getMessage());
+						}
+					});
+				}
+			});
+			PluginResult result = new PluginResult(PluginResult.Status.OK);
+			return result;
+		} else if (action.equals("onContent")) {
+			mContentCallbackID = callbackId;
+			Kiip.getInstance().setOnContentListener(KiipPlugin.this);
+			PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+			result.setKeepCallback(true);
+			return result;
+		} else if (action.equals("onSwarm")) {
+			mSwarmCallbackID = callbackId;
+			Kiip.getInstance().setOnSwarmListener(KiipPlugin.this);
+			PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+			result.setKeepCallback(true);
+			return result;
+		} else {
+			return new PluginResult(PluginResult.Status.INVALID_ACTION);
 		}
-		else {
-			Log.e(TAG, "Invalid Command");
-			result = new PluginResult(Status.INVALID_ACTION);
-		}	
+	}
+
+	private PluginResult startSession() {
+		Kiip.getInstance().startSession(null);
+		PluginResult result = new PluginResult(PluginResult.Status.OK);
 		return result;
+	}
+
+	private PluginResult endSession() {
+		Kiip.getInstance().endSession(null);
+		PluginResult result = new PluginResult(PluginResult.Status.OK);
+		return result;
+	}
+
+	@Override
+	public void onContent(Kiip kiip, String contentId, int amount, String transactionId,
+			String signature) {
+		Log.i(TAG, "onContent called" + mContentCallbackID);
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("contentId", contentId);
+		map.put("amount", Integer.toString(amount));
+		map.put("transactionId", transactionId);
+		map.put("signature", signature);
+
+		JSONObject data = new JSONObject(map);
+		PluginResult result = new PluginResult(PluginResult.Status.OK, data);
+		result.setKeepCallback(true);
+		this.success(result, mContentCallbackID);
+	}
+
+	@Override
+	public void onSwarm(Kiip kiip, String id) {
+		Log.i(TAG, "onSwarm called " + mSwarmCallbackID);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("swarmId", id);
+
+		JSONObject data = new JSONObject(map);
+		PluginResult result = new PluginResult(PluginResult.Status.OK, data);
+		result.setKeepCallback(true);
+		this.success(result, mSwarmCallbackID);
 	}
 
 }
