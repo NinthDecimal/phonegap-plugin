@@ -49,7 +49,7 @@ Installation Instructions for iOS
 4. Install the iOS plugin.
 
 Usage Instructions
-===================
+-------------------
 
 1. You should have the Kiip SDK and Plugin all installed now. To use the SDK you will need to initialize Kiip by doing:
 
@@ -66,7 +66,7 @@ Usage Instructions
 
 
 Help!
-========
+------
 
 This plugin is officially supported by the Kiip Support team. If you need a hand you can reach us at [kiip.me] [http://docs.kiip.com/#support].
 
