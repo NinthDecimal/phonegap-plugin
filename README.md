@@ -1,14 +1,14 @@
-Kiip PhoneGap Plugin v1.0
-===============
+Kiip PhoneGap Plugin v2.0.0beta
+===============================
 
-A Phonegap plugin for the Kiip SDK. Currently supports Android only.
+A Phonegap plugin for the Kiip SDK. Supports iOS and Android.
 
-Usage Instructions for Android
+Installation Instructions for Android
 ------------------------------
 
-1. This guide assumes you've already installed and setup the PhoneGap SDK in your Android project. Take a look at the [Getting Started Guide] [phonegap-guide] for more help.
+1. This guide assumes you've already installed and setup the PhoneGap SDK in your Android project. Take a look at the [Getting Started Guide] [phonegap-guide-android] for more help.
 
-2. You need to download the Kiip SDK from the [developer area] [app.kiip.me]  and copy the files as directed. Don't worry about editing the Android Manifest or anything after that.
+2. You need to download the Kiip SDK from the [developer area] [docs.kiip.me]  and copy the files as directed. Don't worry about editing the Android Manifest or anything after that.
 
 3. Download the Android plugin (it consists of a javascript and a java file). You will need to copy those into the exact same directories as they are currently in. You should have something like this:
 
@@ -19,6 +19,7 @@ Usage Instructions for Android
     /res/drawable/*/kp*.png
     /libs/cordova-{version}.jar
     /libs/kiip-{version}.jar
+    /libs/android-support-v4.jar
     /src/me/kiip/api/phonegap/KiipPhoneGapPlugin.java
     ```
 
@@ -26,38 +27,56 @@ Usage Instructions for Android
 
 5. Add the following line to your `/res/xml/config.xml`:
 
-   ```
    <plugin name="KiipPlugin" value="me.kiip.api.phonegap.KiipPhoneGapPlugin" />
-   ```
 
 6. In your `index.html` include the `kiipPlugin.js` file in your documents `<head>`:
 
-    ```
     <script type="text/javascript" charset="utf-8" src="kiipPlugin.js"></script>
-    ```
 
-7. You should have the Kiip SDK and Plugin all installed now. To use the SDK you will need to initialize Kiip on the [deviceready] [devready] callback by doing:
+7. On the [resume] [resume] callback you will need to call `kiip.startSession(success, failure)`. Calling startSession before initialization will cause crashes.
 
-    ``` javascript
+8. On the [pause] [pause] callback you will need to call `kiip.endSession(success, failure)`.
+
+Installation Instructions for iOS
+----------------------------------
+
+1. This guide assumes you've already installed and setup the PhoneGap SDK in your iOS project. Take a look at the [Getting Started Guide] [phonegap-guide-ios] for more help.
+
+2. You need to download the Kiip SDK from the [developer area] [docs.kiip.me] and copy the files as directed into XCode.
+
+3. Download the iOS plugin (it consists of a javascript file, obj-c header and implementation file).
+
+4. Install the iOS plugin.
+
+Usage Instructions
+===================
+
+1. You should have the Kiip SDK and Plugin all installed now. To use the SDK you will need to initialize Kiip by doing:
+
     kiip.init(api_key, api_secret, successCallback, failureCallback);
-    ```
 
-8. You can unlock an achievement or leaderboard by doing:
+2. You can save a moment by doing:
 
-    ``` javascript
-    kiip.unlockAchievement(achievement_id, successCallback, failureCallback);
-    kiip.saveLeaderboard(leaderboard_id, score, successCallback, failureCallback);
-    ```
+    kiip.saveMoment(moment_id, score, successCallback, failureCallback);
 
-9. On application close you should close the Kiip session by doing:
+3. You can also listen in for virtual currency or swarms by implementing the following callbacks:
 
-    ``` javascript
-    kiip.endSession(successCallback, failureCallback);
-    ```
+    kiip.listenContent(onContentCallback);
+    kiip.listenSwarm(onSwarmCallback);
 
-[phonegap-guide]: http://docs.phonegap.com/en/1.7.0/guide_getting-started_android_index.md.html#Getting%20Started%20with%20Android
-[app.kiip.me]: https://app.kiip.me/
-[devready]: http://docs.phonegap.com/en/1.7.0/cordova_events_events.md.html#deviceready
+
+Help!
+========
+
+This plugin is officially supported by the Kiip Support team. If you need a hand you can reach us at [kiip.me] [http://docs.kiip.com/#support].
+
+
+[phonegap-guide-android]: http://docs.phonegap.com/en/2.2.0/guide_getting-started_android_index.md.html#Getting%20Started%20with%20Android
+[phonegap-guide-ios]: http://docs.phonegap.com/en/2.2.0/guide_getting-started_ios_index.md.html#Getting%20Started%20with%20iOS
+[docs.kiip.me]: https://docs.kiip.me/
+[resume]: http://docs.phonegap.com/en/2.2.0/cordova_events_events.md.html#resume
+[pause]: http://docs.phonegap.com/en/2.2.0/cordova_events_events.md.html#pause
+[kiip.me]: http://docs.kiip.com/#support
 
 Licence
 ------------------------------
