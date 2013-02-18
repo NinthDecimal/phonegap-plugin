@@ -58,11 +58,12 @@ public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnCon
 		} else if (action.equals("endSession")) {
 			return endSession();
 		} else if (action.equals("saveMoment")) {
+			final static String momentName = args.getString(0);
 			cordova.getActivity().runOnUiThread(new Runnable() {
 
 				@Override
 				public void run() {
-					Kiip.getInstance().saveMoment("test", new Kiip.Callback() {
+					Kiip.getInstance().saveMoment(momentName, new Kiip.Callback() {
 
 						@Override
 						public void onFinished(Kiip kiip, Poptart poptart) {
@@ -73,7 +74,7 @@ public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnCon
 						@Override
 						public void onFailed(Kiip kiip, Exception exception) {
 							Log.w(TAG, "Failed to load Kiip Reward");
-							Log.w(TAG, exception.getMessage());
+							Log.w(TAG, "exception=" + exception);
 						}
 					});
 				}
