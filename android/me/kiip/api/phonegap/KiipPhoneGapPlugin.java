@@ -75,8 +75,12 @@ public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnCon
 
 						@Override
 						public void onFinished(Kiip kiip, Poptart poptart) {
-							Log.i(TAG, "Showing reward (if one exists)");
-							poptart.show(cordova.getActivity());
+							if (poptart != null) {
+								Log.i(TAG, "Showing reward");
+								poptart.show(cordova.getActivity());
+						  } else {
+								Log.i(TAG, "No reward to show");
+							}
 						}
 
 						@Override
