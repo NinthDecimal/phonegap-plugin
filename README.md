@@ -1,4 +1,4 @@
-Kiip PhoneGap Plugin v2.0.0beta
+Kiip PhoneGap Plugin v2.0.0
 ===============================
 
 A Phonegap plugin for the Kiip SDK. Supports iOS and Android.
