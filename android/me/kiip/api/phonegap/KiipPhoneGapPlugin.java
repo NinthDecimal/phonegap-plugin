@@ -95,13 +95,13 @@ public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnCon
 			return result;
 		} else if (action.equals("onContent")) {
 			mContentCallbackID = callbackId;
-			Kiip.getInstance().setOnContentListener(KiipPlugin.this);
+			Kiip.getInstance().setOnContentListener(KiipPhoneGapPlugin.this);
 			PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
 			result.setKeepCallback(true);
 			return result;
 		} else if (action.equals("onSwarm")) {
 			mSwarmCallbackID = callbackId;
-			Kiip.getInstance().setOnSwarmListener(KiipPlugin.this);
+			Kiip.getInstance().setOnSwarmListener(KiipPhoneGapPlugin.this);
 			PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
 			result.setKeepCallback(true);
 			return result;
