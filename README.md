@@ -27,11 +27,11 @@ Installation Instructions for Android
 
 5. Add the following line to your `/res/xml/config.xml`:
 
-   <plugin name="KiipPlugin" value="me.kiip.api.phonegap.KiipPhoneGapPlugin" />
+    `<plugin name="KiipPlugin" value="me.kiip.api.phonegap.KiipPhoneGapPlugin" />`
 
 6. In your `index.html` include the `kiipPlugin.js` file in your documents `<head>`:
 
-    <script type="text/javascript" charset="utf-8" src="kiipPlugin.js"></script>
+    `<script type="text/javascript" charset="utf-8" src="kiipPlugin.js"></script>`
 
 7. On the [resume] [resume] callback you will need to call `kiip.startSession(success, failure)`. Calling startSession before initialization will cause crashes.
 
