@@ -25,8 +25,8 @@ Kiip.prototype.listenContent = function(successCallback, failureCallback) {
 	return cordova.exec(successCallback, failureCallback, 'KiipPlugin', 'onContent', []);
 };
 
-Kiip.prototype.listenSwarm = function(successCallback, failureCallback) {
-	return cordova.exec(successCallback, failureCallback, 'KiipPlugin', 'onSwarm', []);
+Kiip.prototype.listenToVideo = function(successCallback, failureCallback) {
+	return corodova.exec(callback, 'KiipPlugin', 'onVideo', []);
 };
 
 kiip = new Kiip();

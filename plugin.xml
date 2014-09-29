@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="nl.x-services.plugins.KiipSDK"
+        version="1.0.0">
+
+  <name>Kiip</name>
+
+  <description>
+    Interface into the Kiip SDK APIs.
+  </description>
+
+  <license>MIT</license>
+
+  <engines>
+    <engine name="cordova" version=">=3.0.0"/>
+  </engines>
+
+  <js-module src="kiipPlugin.js" name="Kiip">
+    <clobbers target="window.plugins.Kiip" />
+  </js-module>
+
+  <!-- ios -->
+  <platform name="ios">
+
+    <config-file target="config.xml" parent="/*">
+      <feature name="HealthKit">
+        <param name="ios-package" value="HealthKit"/>
+      </feature>
+    </config-file>
+
+    <header-file src="src/ios/HealthKit.h"/>
+    <source-file src="src/ios/HealthKit.m"/>
+  </platform>
+
+  <platform name="android">
+
+    <config-file target="config.xml" parents="/*">
+
+    </platform>
+
+</plugin>
