@@ -5,11 +5,11 @@ import java.util.Map;
 
 import me.kiip.sdk.Kiip;
 import me.kiip.sdk.Kiip.OnContentListener;
-import me.kiip.sdk.Kiip.OnSwarmListener;
 import me.kiip.sdk.Poptart;
 
-import org.apache.cordova.api.Plugin;
-import org.apache.cordova.api.PluginResult;
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,26 +17,28 @@ import org.json.JSONObject;
 import android.util.Log;
 import android.webkit.WebSettings.PluginState;
 
-public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnContentListener {
+public class KiipPhoneGapPlugin extends CordovaPlugin implements OnContentListener {
 	static final String TAG = "KiipPhoneGapPlugin";
 
+	public boolean hasRun = true;
 	String mContentCallbackID;
-	String mSwarmCallbackID;
 
 	String KIIP_APP_KEY;
 	String KIIP_APP_SECRET;
 
 	@Override
-	public PluginResult execute(String action, JSONArray args, String callbackId) {
-		if (action.equals("initializeKiip")) {
+	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) {
+		if (action.equals("initializeKiip") && hasRun ) {
 			try {
 				KIIP_APP_KEY = args.getString(0);
 				KIIP_APP_SECRET = args.getString(1);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return new PluginResult(PluginResult.Status.JSON_EXCEPTION);
+				callbackContext.error("Invalid JSON args used. expected a string as the first arg.");
+				return false;
 			}
 
+			hasRun = false;
 			Log.i(TAG, "About to init kiip");
 
 			cordova.getActivity().runOnUiThread(new Runnable() {
@@ -48,15 +50,17 @@ public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnCon
 				}
 			});
 
-			Log.e(TAG, "Kiip inited");
+			Log.i(TAG, "Kiip initialized");
 
-			PluginResult result = new PluginResult(PluginResult.Status.OK);
-			return result;
+			callbackContext.success();
+			return true;
 
 		} else if (action.equals("startSession")) {
-			return startSession();
+			startSession();
+			return true;
 		} else if (action.equals("endSession")) {
-			return endSession();
+			endSession();
+			return true;
 		} else if (action.equals("saveMoment")) {
 			final String momentName;
 
@@ -64,7 +68,8 @@ public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnCon
 				momentName = args.getString(0);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return new PluginResult(PluginResult.Status.JSON_EXCEPTION);
+				callbackContext.error("JSON Exception");
+				return false;
 			}
 
 			cordova.getActivity().runOnUiThread(new Runnable() {
@@ -91,22 +96,16 @@ public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnCon
 					});
 				}
 			});
-			PluginResult result = new PluginResult(PluginResult.Status.OK);
-			return result;
-		} else if (action.equals("onContent")) {
-			mContentCallbackID = callbackId;
-			Kiip.getInstance().setOnContentListener(KiipPhoneGapPlugin.this);
-			PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
-			result.setKeepCallback(true);
-			return result;
-		} else if (action.equals("onSwarm")) {
-			mSwarmCallbackID = callbackId;
-			Kiip.getInstance().setOnSwarmListener(KiipPhoneGapPlugin.this);
-			PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
-			result.setKeepCallback(true);
-			return result;
-		} else {
-			return new PluginResult(PluginResult.Status.INVALID_ACTION);
+			callbackContext.success();
+			return true;
+		}
+		else if (hasRun){
+			callbackContext.error("Has Run");
+			return false;
+			}
+		else {
+			callbackContext.error("Invalid");
+			return false;
 		}
 	}
 
@@ -136,19 +135,5 @@ public class KiipPhoneGapPlugin extends Plugin implements OnSwarmListener, OnCon
 		JSONObject data = new JSONObject(map);
 		PluginResult result = new PluginResult(PluginResult.Status.OK, data);
 		result.setKeepCallback(true);
-		this.success(result, mContentCallbackID);
 	}
-
-	@Override
-	public void onSwarm(Kiip kiip, String id) {
-		Log.i(TAG, "onSwarm called " + mSwarmCallbackID);
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("swarmId", id);
-
-		JSONObject data = new JSONObject(map);
-		PluginResult result = new PluginResult(PluginResult.Status.OK, data);
-		result.setKeepCallback(true);
-		this.success(result, mSwarmCallbackID);
-	}
-
 }
