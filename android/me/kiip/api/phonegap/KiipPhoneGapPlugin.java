@@ -5,6 +5,7 @@ import java.util.Map;
 
 import me.kiip.sdk.Kiip;
 import me.kiip.sdk.Kiip.OnContentListener;
+import me.kiip.sdk.Modal;
 import me.kiip.sdk.Poptart;
 
 import org.apache.cordova.CallbackContext;
@@ -17,7 +18,7 @@ import org.json.JSONObject;
 import android.util.Log;
 import android.webkit.WebSettings.PluginState;
 
-public class KiipPhoneGapPlugin extends CordovaPlugin implements OnContentListener {
+public class KiipPhoneGapPlugin extends CordovaPlugin implements OnContentListener, Modal.VideoListener {
 	static final String TAG = "KiipPhoneGapPlugin";
 
 	public boolean hasRun = true;
@@ -135,5 +136,15 @@ public class KiipPhoneGapPlugin extends CordovaPlugin implements OnContentListen
 		JSONObject data = new JSONObject(map);
 		PluginResult result = new PluginResult(PluginResult.Status.OK, data);
 		result.setKeepCallback(true);
+	}
+
+	@Override
+	public void onVideoWillPlay() {
+		Log.i(TAG, "Modal#onVideoWillPlay");
+	}
+
+	@Override
+	public void onVideoStopped() {
+		Log.i(TAG, "Modal#onVideoStopped");
 	}
 }
