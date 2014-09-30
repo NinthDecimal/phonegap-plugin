@@ -12,6 +12,5 @@
 @interface KiipPhoneGapPlugin : CDVPlugin
 
 @property (retain, nonatomic) NSString *contentCallbackId;
-@property (retain, nonatomic) NSString *swarmCallbackId;
 
 @end
