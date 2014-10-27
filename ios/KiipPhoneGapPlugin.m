@@ -66,6 +66,8 @@
     [self writeJavascript:javaScript];
 }
 
+// #pragma mark- virtual currency
+
 - (void) onContent:(CDVInvokedUrlCommand*)command
 {
     NSLog(@"listenContent called");
@@ -78,8 +80,7 @@
     [self writeJavascript:javaScript];
 }
 
-- (void) kiip:(Kiip *)kiip didReceiveContent:(NSString *)content quantity:(int)quantity transactionId:(NSString *)transactionId signature:(NSString *)signature
-{
+- (void) kiip:(Kiip *)kiip didReceiveContent:(NSString *)content quantity:(int)quantity transactionId:(NSString *)transactionId signature:(NSString *)signature {
     NSLog(@"CONTENT RECEIVED %@ %d %@ %@", content, quantity, transactionId, signature);
     NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           [NSString stringWithFormat:@"%d", quantity], @"quantity",
@@ -93,6 +94,24 @@
 
     NSString* javascript = [pluginResult toSuccessCallbackString:self.contentCallbackId];
     [self writeJavascript:javascript];
+}
+
+// #pragma mark - video callbacks
+
+-(void) onVideo:(CDVInvokedUrlCommand*)command {
+
+}
+
+-(void) kiipVideoPlaybackDidBegin:(Kiip*)kiip {
+    NSLog(@"VideoPlayed");
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [pluginResult setKeepCallbackAsBook:YES];
+}
+
+-(void) kiipVideoPlaybackDidEnd:(Kiip*)kiip {
+    NSLog(@"VideoDismissed");
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [pluginResult setKeepCallbackAsBook:YES];
 }
 
 @end

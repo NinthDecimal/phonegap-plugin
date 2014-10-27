@@ -141,10 +141,14 @@ public class KiipPhoneGapPlugin extends CordovaPlugin implements OnContentListen
 	@Override
 	public void onVideoWillPlay() {
 		Log.i(TAG, "Modal#onVideoWillPlay");
+		PluginResult result = new PluginResult(PluginResult.Status.OK);
+		result.setKeepCallback(true);
 	}
 
 	@Override
 	public void onVideoStopped() {
 		Log.i(TAG, "Modal#onVideoStopped");
+		PluginResult result = new PluginResult(PluginResult.Status.OK);
+		result.setKeepCallback(true);
 	}
 }
